@@ -100,8 +100,7 @@ load_led() {
 
 		# Convert UCI brightness by doing a cross product (uci_brightness / uci_max_brightness) = (x / sysfs_max_brightness).
 		# The cross product is rounded up to avoid turning off the led even if there is a valid positive brightness configured.
-		read sysfs_max_brightness < "/sys/class/leds/${sysfs}/max_brightness"
-		sysfs_brightness=$(( ( $uci_brightness * $sysfs_max_brightness + $uci_max_brightness - 1 ) / $uci_max_brightness ))
+		sysfs_brightness=$(($(expr "( $uci_brightness * $(cat "/sys/class/leds/${sysfs}/max_brightness") + $uci_max_brightness - 1 ) / $uci_max_brightness")))
 
 		printf "%s %s %d" \
 			"$sysfs" \
